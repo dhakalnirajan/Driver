@@ -11,6 +11,9 @@
 
         <div class="container">
             <div id="login-form" class="form-card">
+                <div class="logo">
+                    <img src="./img/vlogo.png" alt="V-Track Logo">
+                </div>
                 <h2>Driver Login</h2>
                 <input type="text" id="login-driverid" placeholder="Driver ID"
                     required>
@@ -18,8 +21,9 @@
                     placeholder="Password" required>
                 <button onclick="login()">Login</button>
                 <p><a href="#" onclick="showForgotPassword()">Forgot
-                        Password?</a></p>
-                <p><a href="#" onclick="showSignUp()">Sign Up</a></p>
+                        Password? Click Here</a></p>
+                <button id="signup" onclick="showSignUp()">Don't Have Account?
+                    Sign Up</button>
             </div>
 
             <div id="signup-form" class="form-card hidden">
