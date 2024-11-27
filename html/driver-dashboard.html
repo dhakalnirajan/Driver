@@ -1,90 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bus Tracker</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./images/vlogo.png" type="image/png">
+    <title> | Bus Tracker</title>
 
-  <!-- Leaflet.js CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
-  <link rel="stylesheet" href="../css/index.css" />
-</head>
-<body>
-  <main>
-    <!-- Map container -->
-    <div id="map-container">
-      <!-- Top controls (Speed and Direction) -->
-      <div id="top-controls">
-        <button id="directionButton">Get Direction</button>
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="../css/index.css" />
+  </head>
+  <body>
+    <main>
+      <!-- Map container -->
+      <div id="map-container">
+        <!-- Top controls (Speed and Direction) -->
+        <div id="top-controls">
+          <button id="directionButton">Get Direction</button>
+        </div>
+
+        <!-- Map area -->
+        <div id="map"></div>
+
+        <!-- Bottom controls (Start and Stop Tracking) -->
+        <div id="bottom-controls">
+          <button id="startTracking">Start Tracking</button>
+          <button id="stopTracking">Stop Tracking</button>
+          <div id="speedDisplay">Speed: 0 km/h</div>
+
+        </div>
+        <!-- For the logged-in bus -->
+        <p id="speed">Speed: --</p>
+        <p id="direction">Direction: --</p>
+
+        <!-- For other buses -->
+        <div id="otherBuses"></div>
       </div>
-  
-      <!-- Map area -->
-      <div id="map"></div>
-  
-      <!-- Bottom controls (Start and Stop Tracking) -->
-      <div id="bottom-controls">
-        <button id="startTracking">Start Tracking</button>
-        <button id="stopTracking" >Stop Tracking</button>
-        <div id="speedDisplay">Speed: 0 km/h</div>
+    </main>
 
-      </div>
-      <!-- For the logged-in bus -->
-<p id="speed">Speed: --</p>
-<p id="direction">Direction: --</p>
+    <!-- Direction Popup -->
+    <div id="directionPopup" style="display: none;">
+      <h3>Get Directions</h3>
+      <label for="startLocation">Starting Tracking:</label>
+      <input type="text" id="startLocation"
+        placeholder="Enter starting location">
+      <ul id="startSuggestions" class="suggestions-list"></ul>
+      <button id="useCurrentLocation">Use My Location</button><br><br>
 
-<!-- For other buses -->
-<div id="otherBuses"></div>
+      <label for="destinationLocation">Destination:</label>
+      <input type="text" id="destinationLocation"
+        placeholder="Enter destination">
+      <ul id="destSuggestions" class="suggestions-list"></ul>
+
+      <button id="getDirections" style="margin-top: 10px;">Get
+        Directions</button>
+      <button id="closeDirectionPopup" style="margin-top: 10px;">Close</button>
     </div>
-  </main>
-  
-  <!-- Direction Popup -->
-  <div id="directionPopup" style="display: none;">
-    <h3>Get Directions</h3>
-    <label for="startLocation">Starting Tracking:</label>
-    <input type="text" id="startLocation" placeholder="Enter starting location">
-    <ul id="startSuggestions" class="suggestions-list"></ul>
-    <button id="useCurrentLocation">Use My Location</button><br><br>
-    
-    <label for="destinationLocation">Destination:</label>
-    <input type="text" id="destinationLocation" placeholder="Enter destination">
-    <ul id="destSuggestions" class="suggestions-list"></ul>
-    
-    <button id="getDirections" style="margin-top: 10px;">Get Directions</button>
-    <button id="closeDirectionPopup" style="margin-top: 10px;">Close</button>
-  </div>
-  <p id="dashboard-error" class="error"></p>
-  
-  <footer>
-    <p>© 2025 GU Bus Tracker. All rights reserved.</p>
-  </footer>
+    <p id="dashboard-error" class="error"></p>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <script src="https://unpkg.com/leaflet.marker.slideto/leaflet.marker.slideto.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.marker.slideto/leaflet.marker.slideto.css" />
+    <footer>
+      <p>© 2025 GU Bus Tracker. All rights reserved.</p>
+    </footer>
 
-  <script>
+    <!-- Firebase -->
+    <script
+      src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script
+      src="https://unpkg.com/leaflet.marker.slideto/leaflet.marker.slideto.js"></script>
+    <link rel="stylesheet"
+      href="https://unpkg.com/leaflet.marker.slideto/leaflet.marker.slideto.css" />
+
+    <script>
     const driverID = localStorage.getItem("driverID");
     if (!driverID) {
       window.location.href = '../index.html';
     }
   </script>
-  <!-- Leaflet.js JS -->
-  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
-  <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css"
-/>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"
-></script>
+    <!-- Leaflet.js JS -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
 
-  <!-- Custom JavaScript -->
-  <script src="../js/app.js"></script>
-</body>
+    <!-- Custom JavaScript -->
+    <script src="../js/app.js"></script>
+  </body>
 </html>
